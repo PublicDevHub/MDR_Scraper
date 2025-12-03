@@ -39,6 +39,11 @@ def test_parse_mdr_articles():
     assert "Dies ist der Inhalt von Artikel 1." in art1.content
     assert art1.source_type == "MDR"
     assert art1.url == "http://example.com#art_1"
+
+    # Check flattened fields
+    assert art1.chapter == "KAPITEL I"
+    assert art1.valid_from == "2025-01-10T00:00:00Z" # ISO format check
+    assert art1.contentVector is None
     assert art1.metadata["chapter"] == "KAPITEL I"
     assert art1.metadata["valid_from"] == "2025-01-10"
 
@@ -49,6 +54,8 @@ def test_parse_mdr_annex():
     anx1 = next(c for c in chunks if c.id == "mdr_anx_i")
     assert anx1.title == "ANHANG I"
     assert "Inhalt von Anhang I." in anx1.content
+    assert anx1.chapter == "Annex"
+    assert anx1.valid_from == "2025-01-10T00:00:00Z"
     assert anx1.metadata["chapter"] == "Annex"
 
 def test_parse_mdr_empty():

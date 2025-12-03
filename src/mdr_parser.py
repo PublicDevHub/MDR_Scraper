@@ -20,6 +20,10 @@ def parse_mdr(html_content: str, url: str, valid_from: str = "2025-01-10") -> Li
     soup = BeautifulSoup(html_content, "lxml")
     chunks = []
 
+    # Ensure ISO 8601 format for valid_from
+    if re.match(r"^\d{4}-\d{2}-\d{2}$", valid_from):
+        valid_from = f"{valid_from}T00:00:00Z"
+
     # Process Articles
     # Structure: <div class="eli-subdivision" id="art_X">
     articles = soup.find_all("div", class_="eli-subdivision", id=re.compile(r"^art_\d+"))
@@ -46,6 +50,7 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
     unique_id = f"mdr_{art_id_attr}"
 
     # Extract Title
+    title_parts = []
     # Usually <p class="title-article-norm">Artikel X</p>
     # And sometimes <div class="eli-title">Descriptive Title</div>
     title_parts = []
@@ -65,6 +70,13 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
         title_text = " - ".join(title_parts)
 
     # Extract Content
+    content = element.get_text(" ", strip=True)
+
+    # Extract Chapter
+    chapter_text = "N/A"
+    parent = element.parent
+    while parent:
+        if parent.name == "div" and parent.get("id", "").startswith("cpt_"):
     # We want the full text of the article.
     content = element.get_text(" ", strip=True)
 
@@ -85,6 +97,9 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
             if chap_p:
                 chapter_text = chap_p.get_text(strip=True)
             else:
+                 chapter_text = parent.get("id")
+            break
+        if parent.name == "body":
                  chapter_text = parent.get("id") # Fallback
             break
         if parent.name == "body": # Stop at body
@@ -97,6 +112,9 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
         title=title_text,
         content=content,
         url=f"{base_url}#{art_id_attr}",
+        chapter=chapter_text,
+        valid_from=valid_from,
+        contentVector=None
         metadata={
             "chapter": chapter_text,
             "valid_from": valid_from
@@ -123,6 +141,9 @@ def process_annex(element: BeautifulSoup, base_url: str, valid_from: str) -> Opt
         title=title_text,
         content=content,
         url=f"{base_url}#{anx_id_attr}",
+        chapter="Annex",
+        valid_from=valid_from,
+        contentVector=None
         metadata={
             "chapter": "Annex",
             "valid_from": valid_from
