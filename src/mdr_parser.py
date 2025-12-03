@@ -51,6 +51,10 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
 
     # Extract Title
     title_parts = []
+    # Usually <p class="title-article-norm">Artikel X</p>
+    # And sometimes <div class="eli-title">Descriptive Title</div>
+    title_parts = []
+
     title_p = element.find("p", class_="title-article-norm")
     if title_p:
         title_parts.append(title_p.get_text(strip=True))
@@ -60,6 +64,7 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
         title_parts.append(eli_title.get_text(strip=True))
 
     if not title_parts:
+        # Fallback if no specific title tags found, though unlikely for valid articles
         title_text = f"Artikel {art_id_attr.split('_')[1]}"
     else:
         title_text = " - ".join(title_parts)
@@ -72,6 +77,22 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
     parent = element.parent
     while parent:
         if parent.name == "div" and parent.get("id", "").startswith("cpt_"):
+    # We want the full text of the article.
+    content = element.get_text(" ", strip=True)
+
+    # Extract Metadata: Chapter
+    # The article is usually nested in a chapter div, e.g., <div id="cpt_II">
+    chapter_text = "N/A"
+    # Traverse parents to find chapter
+    parent = element.parent
+    while parent:
+        if parent.name == "div" and parent.get("id", "").startswith("cpt_"):
+            # Found chapter container
+            # The chapter title is usually the first p tag(s)
+            # e.g. "KAPITEL II"
+            # We can try to grab the first p tag that looks like a title
+            # In our analysis: first p was "KAPITEL II", second was the description.
+            # We'll just grab the text of the first direct p child.
             chap_p = parent.find("p", recursive=False)
             if chap_p:
                 chapter_text = chap_p.get_text(strip=True)
@@ -79,6 +100,9 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
                  chapter_text = parent.get("id")
             break
         if parent.name == "body":
+                 chapter_text = parent.get("id") # Fallback
+            break
+        if parent.name == "body": # Stop at body
             break
         parent = parent.parent
 
@@ -91,6 +115,10 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
         chapter=chapter_text,
         valid_from=valid_from,
         contentVector=None
+        metadata={
+            "chapter": chapter_text,
+            "valid_from": valid_from
+        }
     )
 
 def process_annex(element: BeautifulSoup, base_url: str, valid_from: str) -> Optional[MDRChunk]:
@@ -101,6 +129,7 @@ def process_annex(element: BeautifulSoup, base_url: str, valid_from: str) -> Opt
     unique_id = f"mdr_{anx_id_attr.lower()}"
 
     # Title
+    # <p class="title-annex-1">ANHANG I</p> or similar
     title_p = element.find("p", class_=re.compile(r"title-annex"))
     title_text = title_p.get_text(strip=True) if title_p else anx_id_attr
 
@@ -115,4 +144,8 @@ def process_annex(element: BeautifulSoup, base_url: str, valid_from: str) -> Opt
         chapter="Annex",
         valid_from=valid_from,
         contentVector=None
+        metadata={
+            "chapter": "Annex",
+            "valid_from": valid_from
+        }
     )

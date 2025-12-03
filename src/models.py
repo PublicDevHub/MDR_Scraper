@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Literal, List
 
+
 class MDRChunk(BaseModel):
     id: str = Field(..., description="Unique ID (e.g., mdr_art_10)")
     source_type: Literal["MDR", "MDCG"] = Field(..., description="Source type")
@@ -14,6 +15,7 @@ class MDRChunk(BaseModel):
 
     # Vector field
     contentVector: Optional[List[float]] = Field(default=None, description="Embedding vector (3072 dimensions)")
+    metadata: Dict[str, str] = Field(..., description="Metadata including chapter and valid_from")
 
 class ComplianceData(BaseModel):
     chunks: list[MDRChunk]
