@@ -1,0 +1,5 @@
+beautifulsoup4
+pydantic
+requests
+pytest
+lxml
