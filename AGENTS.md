@@ -61,4 +61,17 @@ Constraints:
 
     Do NOT build a UI. This is a backend data pipeline.
 
+Testing Strategy:
+
+    All code must be accompanied by unit tests.
+
+    Use `pytest` as the testing framework.
+
+    Create a `tests/` directory and ensure tests cover:
+        - Parsing logic (identifying articles, extracting fields).
+        - Schema validation (ensuring output matches the Pydantic model).
+        - Error handling.
+
+    Mock external requests (e.g., HTML fetching) to ensure tests are deterministic and fast.
+
 GO! Start by analyzing the project structure and writing the models.py with Pydantic to enforce the schema.
