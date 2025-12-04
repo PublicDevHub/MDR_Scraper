@@ -44,8 +44,6 @@ def test_parse_mdr_articles():
     assert art1.chapter == "KAPITEL I"
     assert art1.valid_from == "2025-01-10T00:00:00Z" # ISO format check
     assert art1.contentVector is None
-    assert art1.metadata["chapter"] == "KAPITEL I"
-    assert art1.metadata["valid_from"] == "2025-01-10"
 
 def test_parse_mdr_annex():
     chunks = parse_mdr(SAMPLE_HTML, "http://example.com")
@@ -56,7 +54,6 @@ def test_parse_mdr_annex():
     assert "Inhalt von Anhang I." in anx1.content
     assert anx1.chapter == "Annex"
     assert anx1.valid_from == "2025-01-10T00:00:00Z"
-    assert anx1.metadata["chapter"] == "Annex"
 
 def test_parse_mdr_empty():
     chunks = parse_mdr("<html></html>", "http://example.com")

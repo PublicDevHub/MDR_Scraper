@@ -53,7 +53,6 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
     title_parts = []
     # Usually <p class="title-article-norm">Artikel X</p>
     # And sometimes <div class="eli-title">Descriptive Title</div>
-    title_parts = []
 
     title_p = element.find("p", class_="title-article-norm")
     if title_p:
@@ -70,14 +69,6 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
         title_text = " - ".join(title_parts)
 
     # Extract Content
-    content = element.get_text(" ", strip=True)
-
-    # Extract Chapter
-    chapter_text = "N/A"
-    parent = element.parent
-    while parent:
-        if parent.name == "div" and parent.get("id", "").startswith("cpt_"):
-    # We want the full text of the article.
     content = element.get_text(" ", strip=True)
 
     # Extract Metadata: Chapter
@@ -99,9 +90,6 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
             else:
                  chapter_text = parent.get("id")
             break
-        if parent.name == "body":
-                 chapter_text = parent.get("id") # Fallback
-            break
         if parent.name == "body": # Stop at body
             break
         parent = parent.parent
@@ -115,10 +103,6 @@ def process_article(element: BeautifulSoup, base_url: str, valid_from: str) -> O
         chapter=chapter_text,
         valid_from=valid_from,
         contentVector=None
-        metadata={
-            "chapter": chapter_text,
-            "valid_from": valid_from
-        }
     )
 
 def process_annex(element: BeautifulSoup, base_url: str, valid_from: str) -> Optional[MDRChunk]:
@@ -144,8 +128,4 @@ def process_annex(element: BeautifulSoup, base_url: str, valid_from: str) -> Opt
         chapter="Annex",
         valid_from=valid_from,
         contentVector=None
-        metadata={
-            "chapter": "Annex",
-            "valid_from": valid_from
-        }
     )
