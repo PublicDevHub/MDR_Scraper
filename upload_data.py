@@ -50,12 +50,12 @@ openai_client = AzureOpenAI(
 # --- 3. HELPER FUNCTIONS ---
 def generate_embeddings(text):
     """Generates a vector for the given text using Azure OpenAI."""
-    # Safety: Truncate to ~8000 chars to avoid token limits
-    safe_text = text[:8000] 
+    # Note: text is assumed to be pre-chunked by the parser to fit within token limits.
+    # We pass the full text to the embedding model.
     
     # CRITICAL: This must use the AOAI_DEPLOYMENT variable
     response = openai_client.embeddings.create(
-        input=safe_text,
+        input=text,
         model=AOAI_DEPLOYMENT
     )
     return response.data[0].embedding
