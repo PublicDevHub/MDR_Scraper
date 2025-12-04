@@ -15,7 +15,6 @@ class MDRChunk(BaseModel):
 
     # Vector field
     contentVector: Optional[List[float]] = Field(default=None, description="Embedding vector (3072 dimensions)")
-    metadata: Dict[str, str] = Field(..., description="Metadata including chapter and valid_from")
 
 class ComplianceData(BaseModel):
     chunks: list[MDRChunk]
