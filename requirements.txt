@@ -3,3 +3,7 @@ pydantic
 requests
 pytest
 lxml
+azure-search-documents
+azure-core
+openai>=1.0.0
+python-dotenv

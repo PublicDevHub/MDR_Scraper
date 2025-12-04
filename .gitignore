@@ -1,5 +1,15 @@
+# Security
+.env
+.env.local
+# Python
 __pycache__/
 output/
 *.pyc
 .pytest_cache/
+# Environments
 .venv/
+env/
+venv/
+# IDE settings 
+.vscode/
+.idea/
