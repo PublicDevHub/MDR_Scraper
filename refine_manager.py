@@ -14,8 +14,8 @@ AOAI_KEY = os.getenv("AZURE_OPENAI_KEY")
 AOAI_DEPLOYMENT = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-5.1-chat") # Updated Model
 AOAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2024-08-01-preview")
 
-INPUT_FOLDER = "D:/mdr_output"
-OUTPUT_FOLDER = "D:/mdr_refined"
+INPUT_FOLDER = os.getenv("OUTPUT_MD_PATH")
+OUTPUT_FOLDER =  os.getenv("OUTPUT_MD_PATH_REFINED")
 
 # LIMITS (GPT-5.1 Specs)
 MAX_OUTPUT_TOKENS = 128000 # Safety buffer unter 16.384

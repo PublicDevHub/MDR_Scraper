@@ -13,8 +13,8 @@ ENDPOINT = os.getenv("AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT")
 DOC_INT_KEY = os.getenv("AZURE_DOCUMENT_INTELLIGENCE_KEY")
 
 # CONFIG - Folder Paths (Anpassbar)
-INPUT_FOLDER = "D:/mdr_input"   # Hier liegen deine PDFs
-OUTPUT_FOLDER = "D:/mdr_output" # Hier landen die Markdown Files
+INPUT_FOLDER = os.getenv("INPUT_PDF_PATH")  # Hier liegen deine PDFs
+OUTPUT_FOLDER = os.getenv("OUTPUT_MD_PATH")  # Hier landen die Markdown Files
 
 def table_to_markdown(table) -> str:
     """
