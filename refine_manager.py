@@ -9,10 +9,10 @@ from openai import AzureOpenAI
 load_dotenv()
 
 # --- CONFIG ---
-AOAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
-AOAI_KEY = os.getenv("AZURE_OPENAI_KEY")
-AOAI_DEPLOYMENT = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-5.1-chat") # Updated Model
-AOAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2024-08-01-preview")
+AOAI_ENDPOINT = os.getenv("AZURE_OPENAI_CHAT_ENDPOINT")
+AOAI_KEY = os.getenv("AZURE_OPENAI_CHAT_KEY")
+AOAI_DEPLOYMENT = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT", "gpt-5.1-chat") # Updated Model
+AOAI_API_VERSION = os.getenv("AZURE_OPENAI_CHAT_API_VERSION", "2024-08-01-preview")
 
 INPUT_FOLDER = os.getenv("OUTPUT_MD_PATH")
 OUTPUT_FOLDER =  os.getenv("OUTPUT_MD_PATH_REFINED")
